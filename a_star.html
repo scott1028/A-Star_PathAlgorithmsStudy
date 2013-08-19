@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+	<meta charset="UTF-8">
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="scene_shader.js"></script>
+	<title>A Star Path</title>
+</head>
+<body>
+	<script>
+		// run
+			$(document).ready(function(e){
+				window.scene=create_empty_world(10,10);
+				window.blockeds=create_blocked();
+				window.objs=create_object();
+			});
+	</script>
+	<script>
+		// a star path
+		$(document).ready(function(e){
+			var open=new Array;
+			var closed=new Array;
+
+			// 計算 f=g+h ,返回包含 fgh 的 tpos
+			window.cal_fgh=function(tpos,objs){
+				var objs=objs || window.objs;
+				var tpos=tpos || { x:0, y:0 };
+				var g=Math.sqrt(Math.pow(tpos.x-objs.p.x,2)+Math.pow(tpos.y-objs.p.y,2),2);
+				var h=Math.sqrt(Math.pow(tpos.x-objs.t.x,2)+Math.pow(tpos.y-objs.t.y,2),2);
+				return { f:g+h, g:g, h:h, x:tpos.x, y:tpos.y };
+			};
+
+			// 開啟附近節點(4 node policy,maybe you can try 8 node polocy)
+			window.open_near_node=function(tpos){
+				var tpos=tpos || { x:0, y:0 };
+				var up={ x:tpos.x, y:tpos.y-1 };
+				var down={ x:tpos.x, y:tpos.y+1 };
+				var left={ x:tpos.x-1, y:tpos.y };
+				var right={ x:tpos.x, y:tpos.y+1 };
+
+				return {
+					up:up,
+					down:down,
+					left:left,
+					right:right
+				};
+			};
+
+			// 可以算出目標節點的附近的 node of min f
+			window.get_by_min_f=function(tpos){
+				var a=new Object;
+				for(var i in open_near_node(tpos)){
+					var pos=open_near_node(tpos)[i];
+					var pos_with_fgh=cal_fgh(pos);
+					if(a.f & a.f>pos_with_fgh.f){
+						a=pos_with_fgh;
+					}
+					else{
+						a=pos_with_fgh;
+					}
+				};
+				return a;
+			};
+
+			// add p origin pos
+			closed.push(objs.p);
+		});
+
+	</script>
+</body>
+</html>
