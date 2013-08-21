@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="scene_shader.js"></script>
-	<title>A Star Path</title>
+	<title>A Star 路徑演算法實作</title>
 </head>
 <body>
 	<script>
@@ -18,52 +18,58 @@
 	<script>
 		// a star path
 		$(document).ready(function(e){
-			var open=new Array;
-			var closed=new Array;
+			// open & close list
+				window.aOpen=new NodeArray;
+				window.aClosed=new NodeArray;
 
 			// 計算 f=g+h ,返回包含 fgh 的 tpos
-			window.cal_fgh=function(tpos,objs){
-				var objs=objs || window.objs;
-				var tpos=tpos || { x:0, y:0 };
-				var g=Math.sqrt(Math.pow(tpos.x-objs.p.x,2)+Math.pow(tpos.y-objs.p.y,2),2);
-				var h=Math.sqrt(Math.pow(tpos.x-objs.t.x,2)+Math.pow(tpos.y-objs.t.y,2),2);
-				return { f:g+h, g:g, h:h, x:tpos.x, y:tpos.y };
-			};
-
-			// 開啟附近節點(4 node policy,maybe you can try 8 node polocy)
-			window.open_near_node=function(tpos){
-				var tpos=tpos || { x:0, y:0 };
-				var up={ x:tpos.x, y:tpos.y-1 };
-				var down={ x:tpos.x, y:tpos.y+1 };
-				var left={ x:tpos.x-1, y:tpos.y };
-				var right={ x:tpos.x, y:tpos.y+1 };
-
-				return {
-					up:up,
-					down:down,
-					left:left,
-					right:right
+				window.cal_fgh=function(tpos,objs){
+					var objs=objs || window.objs;
+					var tpos=tpos || { x:0, y:0 };
+					var g=Math.sqrt(Math.pow(tpos.x-objs.p.x,2)+Math.pow(tpos.y-objs.p.y,2),2);
+					var h=Math.sqrt(Math.pow(tpos.x-objs.t.x,2)+Math.pow(tpos.y-objs.t.y,2),2);
+					return { f:g+h, g:g, h:h, x:tpos.x, y:tpos.y };
 				};
-			};
 
-			// 可以算出目標節點的附近的 node of min f
-			window.get_by_min_f=function(tpos){
-				var a=new Object;
-				for(var i in open_near_node(tpos)){
-					var pos=open_near_node(tpos)[i];
-					var pos_with_fgh=cal_fgh(pos);
-					if(a.f & a.f>pos_with_fgh.f){
-						a=pos_with_fgh;
-					}
-					else{
-						a=pos_with_fgh;
-					}
+			// 開啟附近節點(4 node policy,maybe you can try 8 node polocy), the first is min f
+				window.open_near_node=function(tpos){
+					var tpos=tpos || { x:0, y:0 };
+					var up={ x:tpos.x, y:tpos.y-1 };
+					var down={ x:tpos.x, y:tpos.y+1 };
+					var left={ x:tpos.x-1, y:tpos.y };
+					var right={ x:tpos.x+1, y:tpos.y };
+
+					var near_node=[ cal_fgh(up), cal_fgh(down), cal_fgh(left), cal_fgh(right) ];
+
+					near_node.sort(function(c,n){
+						return c.f>=n.f;	// 由小至大 c.f<=n.f 由大至小
+					});
+
+					// 第一個是 f 值最小的
+					return near_node;
 				};
-				return a;
-			};
 
-			// add p origin pos
-			closed.push(objs.p);
+			// add p origin pos, A star Path
+				window.run=function(){
+					window.sp=cal_fgh(objs.p);
+					aClosed.push(sp);
+					
+					while(!aClosed.includePos(objs.t)){
+						// if(prompt().length>0){break;};
+						window.nearNodes=open_near_node(sp);
+						for(var i=0;i<nearNodes.length;i++){
+							aClosed.includePos(nearNodes[i]) ? undefined : aOpen.push(nearNodes[i]);
+						};
+						window.bestNode=aOpen.popNodeWithMinF();
+						aClosed.push(bestNode);
+						sp=window.bestNode;
+					};
+				};
+
+				run();
+				for(var i=0;i<aClosed.length;i++){
+					console.log('路徑->',aClosed[i]);
+				};
 		});
 
 	</script>

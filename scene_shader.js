@@ -54,3 +54,53 @@
 			}
 		};
 	};
+
+// node Container Class extend Array
+	window.NodeArray=function(){};
+	window.NodeArray.prototype=new Array;
+	window.NodeArray.prototype.push=function(pos){
+		if(typeof pos.x!='number' || typeof pos.y!='number' || typeof pos.f!='number'){
+			console.log('push val error');
+			return true;
+		}
+		var bThisDontHavePos=this.every(function(val,idx){
+			if(val.x==pos.x && val.y==pos.y){
+				return false;
+			}
+			else{
+				return true;
+			}
+		});
+		bThisDontHavePos ? Array.prototype.push.call(this,pos) : console.log('already existed!');
+	};
+	window.NodeArray.prototype.getNodeWithMinF=function(){		// return 列表中 f 直最小的 node [不會移除]
+		var nodeWithMinF=this[0];
+		for(var i=0;i<this.length;i++){
+			thisNode=this[i];
+			nodeWithMinF = (thisNode.f<=nodeWithMinF.f) ? thisNode : nodeWithMinF;
+		}
+		return nodeWithMinF;
+	};
+	window.NodeArray.prototype.popNodeWithMinF=function(){		// pop 列表中 f 直最小的 node [會移除]
+		var nodeWithMinF=this[0];
+		var idx=0;
+		for(var i=0;i<this.length;i++){
+			thisNode=this[i];
+			if(thisNode.f<=nodeWithMinF.f){
+				nodeWithMinF=thisNode;
+				idx=i;
+			};
+		}
+		return this.splice(idx,1)[0];
+	};
+	window.NodeArray.prototype.includePos=function(pos){
+		var notInclude=this.every(function(val,idx){
+			if(val.x==pos.x && val.y==pos.y){
+				return false;									// 會終止 every 函數
+			}
+			else{
+				return true;
+			};
+		});
+		return !notInclude;
+	};
