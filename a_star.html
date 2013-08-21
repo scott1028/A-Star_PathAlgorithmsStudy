@@ -46,6 +46,9 @@
 						// console.log(wall);
 						if(wall){
 							near_node.splice(i,1);			// 從周圍 node 中再把牆壁刪掉
+						}
+						else if(near_node[i].x<0 || near_node[i].y<0 || near_node[i].x<0 || near_node[i].y<0 || near_node[i].x>9 || near_node[i].y>9){
+							near_node.splice(i,1);			// 刪除超過邊界的部分 x[0-9], y[0-9]
 						};
 					};
 
@@ -99,18 +102,15 @@
 						tpos=sub_node;
 						// if(prompt().length){break;}
 					}
-
-					
-
 				};
 
 				run();
-				// for(var i=0;i<aClosed.length;i++){
-				// 	console.log('路徑->',aClosed[i]);
-				// 	$('td[pos='+aClosed[i].x+'-'+aClosed[i].y+']').css({
-				// 		backgroundColor:'green'
-				// 	});
-				// };
+				for(var i=0;i<aClosed.length;i++){
+					console.log('路徑->',aClosed[i]);
+					$('td[pos='+aClosed[i].x+'-'+aClosed[i].y+']').css({
+						backgroundColor:'green'
+					});
+				};
 		});
 
 	</script>
