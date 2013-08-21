@@ -22,11 +22,12 @@
 		var block_list=new Array;
 		for(var i=0;i<10;i++){
 			for(var j=0;j<10;j++){
-					if((i>0 && i<9) && (j==4 || j==5)){
-					var td=$('td[pos='+j+'-'+i+']').css({
+					if((j>0 && j<9) && (i==4 || i==5)){
+					var td=$('td[pos='+i+'-'+j+']').css({
 						backgroundColor:'silver'
 					});
 					block_list.push(td);
+					td.attr('wall',1);
 				};
 			};
 		};

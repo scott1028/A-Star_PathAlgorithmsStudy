@@ -41,6 +41,14 @@
 
 					var near_node=[ cal_fgh(up), cal_fgh(down), cal_fgh(left), cal_fgh(right) ];
 
+					for(var i=0;i<near_node.length;i++){
+						var wall=$('td[pos='+near_node[i].x+'-'+near_node[i].y+']').attr('wall');
+						console.log(wall);
+						if(wall){
+							near_node.splice(i,1);			// 從周圍 node 中再把牆壁刪掉
+						};
+					};
+
 					near_node.sort(function(c,n){
 						return c.f>=n.f;	// 由小至大 c.f<=n.f 由大至小
 					});
