@@ -43,7 +43,7 @@
 
 					for(var i=0;i<near_node.length;i++){
 						var wall=$('td[pos='+near_node[i].x+'-'+near_node[i].y+']').attr('wall');
-						console.log(wall);
+						// console.log(wall);
 						if(wall){
 							near_node.splice(i,1);			// 從周圍 node 中再把牆壁刪掉
 						};
@@ -62,11 +62,11 @@
 					window.sp=cal_fgh(objs.p);
 					aClosed.push(sp);
 					
-					while(!aClosed.includePos(objs.t)){
+					while(!aClosed.includePos(objs.t).bool){
 						// if(prompt().length>0){break;};
 						window.nearNodes=open_near_node(sp);
 						for(var i=0;i<nearNodes.length;i++){
-							aClosed.includePos(nearNodes[i]) ? undefined : aOpen.push(nearNodes[i]);
+							aClosed.includePos(nearNodes[i]).bool ? undefined : aOpen.push(nearNodes[i]);
 						};
 						window.bestNode=aOpen.popNodeWithMinF();
 						aClosed.push(bestNode);
@@ -74,10 +74,43 @@
 					};
 				};
 
-				run();
-				for(var i=0;i<aClosed.length;i++){
-					console.log('路徑->',aClosed[i]);
+				window.build_path=function(){
+					var path=new NodeArray;
+
+					// do
+					var tpos=objs.t;
+					while(!path.includePos(objs.p).bool){
+						var tns=open_near_node(tpos);
+						console.log(tns);
+						// var sub_node=new NodeArray;
+						for(var i=0;i<tns.length;i++){
+							var per_nodes=new NodeArray;
+							if(aClosed.includePos(tns[i])){
+								per_nodes.push(tns[i]);
+							};
+
+							var getNode=per_nodes.getNodeWithMinF();
+							// sub_node.push(getNode);
+
+							console.log( '=>',getNode);
+						};
+
+						path.push(sub_node);
+						tpos=sub_node;
+						// if(prompt().length){break;}
+					}
+
+					
+
 				};
+
+				run();
+				// for(var i=0;i<aClosed.length;i++){
+				// 	console.log('路徑->',aClosed[i]);
+				// 	$('td[pos='+aClosed[i].x+'-'+aClosed[i].y+']').css({
+				// 		backgroundColor:'green'
+				// 	});
+				// };
 		});
 
 	</script>

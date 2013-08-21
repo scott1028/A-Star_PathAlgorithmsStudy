@@ -22,7 +22,7 @@
 		var block_list=new Array;
 		for(var i=0;i<10;i++){
 			for(var j=0;j<10;j++){
-					if((j>0 && j<9) && (i==4 || i==5)){
+					if((j>=0 && j<6) && (i==4 || i==5)){
 					var td=$('td[pos='+i+'-'+j+']').css({
 						backgroundColor:'silver'
 					});
@@ -61,7 +61,7 @@
 	window.NodeArray.prototype=new Array;
 	window.NodeArray.prototype.push=function(pos){
 		if(typeof pos.x!='number' || typeof pos.y!='number' || typeof pos.f!='number'){
-			console.log('push val error');
+			// console.log('push val error');
 			return true;
 		}
 		var bThisDontHavePos=this.every(function(val,idx){
@@ -72,7 +72,7 @@
 				return true;
 			}
 		});
-		bThisDontHavePos ? Array.prototype.push.call(this,pos) : console.log('already existed!');
+		bThisDontHavePos ? Array.prototype.push.call(this,pos) : undefined/*console.log('already existed!')*/;
 	};
 	window.NodeArray.prototype.getNodeWithMinF=function(){		// return 列表中 f 直最小的 node [不會移除]
 		var nodeWithMinF=this[0];
@@ -95,13 +95,21 @@
 		return this.splice(idx,1)[0];
 	};
 	window.NodeArray.prototype.includePos=function(pos){
+		var index;
 		var notInclude=this.every(function(val,idx){
 			if(val.x==pos.x && val.y==pos.y){
+				index=idx;
 				return false;									// 會終止 every 函數
 			}
 			else{
 				return true;
 			};
 		});
-		return !notInclude;
+		return { bool:!notInclude, index:index };
 	};
+
+// TimeSleep
+Date.sleep=function(sec){
+	var s=(new Date).getTime();
+	while((new Date).getTime()<=(s+1000*sec)){};
+}
