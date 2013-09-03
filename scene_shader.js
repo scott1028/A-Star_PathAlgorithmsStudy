@@ -42,7 +42,7 @@
 		var t=$('<span class="t"></span>').html('t').css('color','red');
 
 		p.appendTo($('td[pos=1-4]'));
-		t.appendTo($('td[pos=9-4]'));
+		t.appendTo($('td[pos=9-9]'));
 
 		return {
 			p:{
@@ -50,8 +50,8 @@
 				y:parseInt($('td[pos=1-4]').attr('pos').split('-')[1]),
 			},
 			t:{
-				x:parseInt($('td[pos=9-4]').attr('pos').split('-')[0]),
-				y:parseInt($('td[pos=9-4]').attr('pos').split('-')[1]),
+				x:parseInt($('td[pos=9-9]').attr('pos').split('-')[0]),
+				y:parseInt($('td[pos=9-9]').attr('pos').split('-')[1]),
 			}
 		};
 	};
