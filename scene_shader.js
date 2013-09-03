@@ -22,7 +22,7 @@
 		var block_list=new Array;
 		for(var i=0;i<10;i++){
 			for(var j=0;j<10;j++){
-					if((j>=0 && j<5) && (i==4 || i==5)){
+					if((j>=0 && j<8) && (i==4 || i==5)){
 					var td=$('td[pos='+i+'-'+j+']').css({
 						backgroundColor:'silver'
 					});
