@@ -114,7 +114,37 @@
 
 			// from target pos to origin pos get path, 計算交集跟最小 F 值取路徑點
 				console.log(objs.p,'<-',objs.t);
-				
+
+				var path=new NodeArray();			// 存最終路徑
+				path.push(cal_fgh(objs.t));			// 加入反向起點
+				var beginNode=objs.t;				// 設定起點
+
+				// recursion(遞迴部分)
+				while( !(beginNode.x==objs.p.x && beginNode.y==objs.p.y) ){
+					var near_node=new NodeArray();
+					for(var i=0;i<open_near_node(beginNode).length;i++){
+						near_node.push(open_near_node(beginNode)[i]);
+					};
+					var union_aClose_nodes=new NodeArray();
+					for(var i=0;i<near_node.length;i++){
+						var res=aClosed.includePos(near_node[i]);
+						var res_p=path.includePos(near_node[i]);
+						if(res.bool && res_p.bool!=true){
+							union_aClose_nodes.push(near_node[i]);
+						};
+					};
+					console.log(union_aClose_nodes);
+					console.log(union_aClose_nodes.getNodeWithMinF());
+					path.push(union_aClose_nodes.getNodeWithMinF());
+					beginNode=union_aClose_nodes.getNodeWithMinF();
+					// prompt().toString();			// Debug
+				}
+
+				for(var i=0;i<path.length;i++){
+					$('td[pos='+path[i].x+'-'+path[i].y+']').css({
+						backgroundColor:'orange'
+					});
+				}
 		});
 
 	</script>
