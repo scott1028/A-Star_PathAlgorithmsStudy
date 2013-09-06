@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+	<meta charset="UTF-8">
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="stage.js"></script>
+	<script src="objects.js"></script>
+	<script src="aStar.js"></script>
+	<title>A Star 路徑演算法實作</title>
+</head>
+<body>
+	<script>
+		// run
+			$(document).ready(function(e){
+				window.scene=create_empty_world(10,10);
+				window.blockeds=create_blocked();
+				window.objs=create_object();
+			});
+	</script>
+</body>
+</html>
