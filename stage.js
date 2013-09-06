@@ -34,5 +34,45 @@
 			};
 		};
 
+		for(var i=3;i>0;i--){
+			var td=$('td[pos='+i+'-'+3+']').css({
+				backgroundColor:'silver'
+			});
+			td.attr('wall',1);
+		};
+
+		for(var i=3;i>0;i--){
+			var td=$('td[pos='+i+'-'+3+']').css({
+				backgroundColor:'silver'
+			});
+			td.attr('wall',1);
+		};
+
+		for(var i=8;i>5;i--){
+			var td=$('td[pos='+i+'-'+7+']').css({
+				backgroundColor:'silver'
+			});
+			td.attr('wall',1);
+		};
+
+		for(var i=9;i>6;i--){
+			var td=$('td[pos='+i+'-'+5+']').css({
+				backgroundColor:'silver'
+			});
+			td.attr('wall',1);
+		};
+
+		for(var i=8;i>5;i--){
+			var td=$('td[pos='+i+'-'+2+']').css({
+				backgroundColor:'silver'
+			});
+			td.attr('wall',1);
+		};
+
+		var td=$('td[pos='+8+'-'+1+']').css({
+			backgroundColor:'silver'
+		});
+		td.attr('wall',1);
+
 		return { list:block_list };
 	};
