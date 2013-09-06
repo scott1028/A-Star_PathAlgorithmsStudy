@@ -1,3 +1,7 @@
+// 目標與原點
+	var spos={x:1,y:1};
+	var tpos={x:7,y:8};
+
 // 點的容器
 	var node=function(x,y,f,g,h){
 		this.x=x;
@@ -52,12 +56,16 @@
 		return pos;
 	};
 
-	// calculate all F=G+H
+	// calculate all F=G+H, calAllFValue({x:1,y:2},{x:7,y:8})
 	node_path.prototype.calAllFValue=function(spos,tpos){
+		var spos=spos || window.spos;
+		var tpos=tpos || window.tpos;
 		var posArray=this;this.forEach(function(val,idx){
 			var k=node_path.cal_fgh(spos,val,tpos);
 			posArray[idx]=new node(k.x, k.y, k.f, k.g, k.h);
 		});
+
+		return posArray;
 	};
 
 	// get union multi pos with another pos x,y array
@@ -85,6 +93,7 @@
 		});
 	};
 
+	// 非必要不會直接調用
 	// static method, node_path.cal_fgh({x:1,y:1},{x:0,y:0},{x:2,y:2})
 	node_path.cal_fgh=function(spos,cpos,tpos){
 		var g=Math.sqrt(Math.pow(Math.abs(cpos.x-spos.x),2)+Math.pow(Math.abs(cpos.y-spos.y),2),2);
