@@ -123,6 +123,9 @@
 
 		var s0=new node(pos.spos.x,pos.spos.y);
 		open.pushByUniquePos(s0);
+		
+		var last_pos,now_pos;
+		// last_pos=s0;
 
 		while(close.pushByUniquePos(pos.tpos,false).success){
 			open.calAllFValue();
@@ -130,10 +133,23 @@
 			open.removePos(s1);
 			close.pushByUniquePos(s1);
 
+			// 定義now pos
+			now_pos=s1;
+
+			// 製作向量符號
+			if(now_pos && last_pos){
+				var dir;
+				(now_pos.x>last_pos.x) ? dir='→' : undefined;
+				(now_pos.x<last_pos.x) ? dir='←' : undefined;
+				(now_pos.y>last_pos.y) ? dir='↓' : undefined;
+				(now_pos.y<last_pos.y) ? dir='↑' : undefined;
+			};
+
 			// Debug
-			$('td[pos='+s1.x+'-'+s1.y+']').css({backgroundColor:'orange'});
+			$('td[pos='+s1.x+'-'+s1.y+']').css({backgroundColor:'orange'}).text(dir);
 			prompt('Enter下一步!').toString();
 
+			console.log(last_pos,now_pos);
 
 			var _nearNodes=s1.openNearNodes();
 			_nearNodes.calAllFValue();
@@ -149,6 +165,9 @@
 					open.pushByUniquePos(val);
 				};
 			});
+
+			// 定義last pos
+			last_pos=s1;
 		};
 	};
 
