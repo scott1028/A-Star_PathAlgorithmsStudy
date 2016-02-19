@@ -150,50 +150,58 @@
         var last_pos,now_pos;
         // last_pos=s0;
 
-        while(close.pushByUniquePos(pos.tpos,false).success){
-            open.calAllFValue();
-            var s1=open.getPosWithMinH();   //getPosWithMinF();     // 改用 H 值
-            open.removePos(s1);
-            close.pushByUniquePos(s1);
+        var callbackFun = function(){
+            if(close.pushByUniquePos(pos.tpos,false).success){
+                open.calAllFValue();
+                var s1=open.getPosWithMinH();   //getPosWithMinF();     // 改用 H 值
+                open.removePos(s1);
+                close.pushByUniquePos(s1);
 
-            // 定義now pos
-            now_pos=s1;
+                // 定義now pos
+                now_pos=s1;
 
-            // 製作向量符號
-            console.log(now_pos, last_pos);
-            last_pos = updateLastPos(now_pos, close);  // 校正作為上一不的最近一個可走得座標
-            if(now_pos && last_pos){
-                var dir;
-                (now_pos.x>last_pos.x) ? dir='→' : undefined;
-                (now_pos.x<last_pos.x) ? dir='←' : undefined;
-                (now_pos.y>last_pos.y) ? dir='↓' : undefined;
-                (now_pos.y<last_pos.y) ? dir='↑' : undefined;
-            };
-
-            // Debug
-            $('td[pos='+s1.x+'-'+s1.y+']').css({backgroundColor:'orange'}).text(dir);
-            // if(prompt('Enter下一步!')) break;
-
-            console.log(last_pos,now_pos);
-
-            var _nearNodes=s1.openNearNodes();
-            _nearNodes.calAllFValue();
-
-            console.log(_nearNodes);
-
-            var nearNodes=removeTouchWallAndClampNodes(_nearNodes);
-
-            nearNodes.forEach(function(val,idx){
-                var f1=close.pushByUniquePos(val,false);
-                var f2=open.pushByUniquePos(val,false);
-                if(f1.success && f2.success){
-                    open.pushByUniquePos(val);
+                // 製作向量符號
+                console.log(now_pos, last_pos);
+                last_pos = updateLastPos(now_pos, close);  // 校正作為上一不的最近一個可走得座標
+                if(now_pos && last_pos){
+                    var dir;
+                    (now_pos.x>last_pos.x) ? dir='→' : undefined;
+                    (now_pos.x<last_pos.x) ? dir='←' : undefined;
+                    (now_pos.y>last_pos.y) ? dir='↓' : undefined;
+                    (now_pos.y<last_pos.y) ? dir='↑' : undefined;
                 };
-            });
 
-            // 定義last pos
-            last_pos=s1;
+                // Debug
+                $('td[pos='+s1.x+'-'+s1.y+']').css({backgroundColor:'orange'}).text(dir);
+                // if(prompt('Enter下一步!')) break;
+
+                console.log(last_pos,now_pos);
+
+                var _nearNodes=s1.openNearNodes();
+                _nearNodes.calAllFValue();
+
+                console.log(_nearNodes);
+
+                var nearNodes=removeTouchWallAndClampNodes(_nearNodes);
+
+                nearNodes.forEach(function(val,idx){
+                    var f1=close.pushByUniquePos(val,false);
+                    var f2=open.pushByUniquePos(val,false);
+                    if(f1.success && f2.success){
+                        open.pushByUniquePos(val);
+                    };
+                });
+
+                // 定義last pos
+                last_pos=s1;
+                
+                // recursive
+                setTimeout(callbackFun, 50);
+            };
         };
+
+        // start
+        callbackFun();
     };
 
 // 移除牆壁的nearNodes
