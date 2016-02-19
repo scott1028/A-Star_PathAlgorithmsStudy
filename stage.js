@@ -74,5 +74,22 @@
 		});
 		td.attr('wall',1);
 
+		var td=$('td[pos=3-6]').css({
+			backgroundColor:'silver'
+		});
+		td.attr('wall',1);
+		var td=$('td[pos=2-6]').css({
+			backgroundColor:'silver'
+		});
+		td.attr('wall',1);
+		var td=$('td[pos=2-7]').css({
+			backgroundColor:'silver'
+		});
+		td.attr('wall',1);
+		var td=$('td[pos=2-8]').css({
+			backgroundColor:'silver'
+		});
+		td.attr('wall',1);
+
 		return { list:block_list };
 	};
