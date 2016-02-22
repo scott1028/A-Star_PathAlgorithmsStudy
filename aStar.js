@@ -197,7 +197,43 @@
                 
                 // recursive
                 setTimeout(callbackFun, 50);
-            };
+            }
+            else{
+                console.log('Found!');
+
+                // 計算出路徑
+                var getPathByReturnHome = function(tpos){
+                    var signal = $('td[pos='+tpos.x+'-'+tpos.y+']').text();
+                    
+                    // set path color
+                    $('td[pos='+tpos.x+'-'+tpos.y+']').css('backgroundColor', 'red');
+
+                    var nextTPos;
+                    switch(signal){
+                        case '→':
+                            nextTPos = $(tpos)[0];
+                            nextTPos.x -= 1;
+                            getPathByReturnHome(nextTPos);
+                            break;
+                        case '←':
+                            nextTPos = $(tpos)[0];
+                            nextTPos.x += 1;
+                            getPathByReturnHome(nextTPos);
+                            break;
+                        case '↓':
+                            nextTPos = $(tpos)[0];
+                            nextTPos.y -= 1;
+                            getPathByReturnHome(nextTPos);
+                            break;
+                        case '↑':
+                            nextTPos = $(tpos)[0];
+                            nextTPos.y += 1;
+                            getPathByReturnHome(nextTPos);
+                            break;
+                    }
+                };
+                getPathByReturnHome(pos.tpos);
+            }
         };
 
         // start
