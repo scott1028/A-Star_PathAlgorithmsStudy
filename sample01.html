@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0-rc.2/angular.js"></script>
+
+</head>
+<body ng-app>
+<table>
+    <tr ng-repeat="y in [0,1,2,3,4,5,6,7,8,9]">
+        <td
+            title="({{ y }},{{ x }})"
+            x="{{ x }}"
+            y="{{ y }}"
+            ng-repeat="x in [0,1,2,3,4,5,6,7,8,9]"></td>
+    </tr>
+</table>
+<script type="text/javascript">
+    // map design input
+    var map = [
+        0,0,0,0,1,1,0,0,0,0,
+        0,0,0,0,1,1,0,0,1,0,
+        0,0,0,0,1,1,1,1,1,0,
+        0,1,1,1,1,1,0,0,0,0,
+        0,0,0,0,1,1,0,0,0,0,
+        0,0,0,0,1,1,0,1,1,1,
+        0,0,1,1,1,1,0,0,0,0,
+        0,0,1,0,1,1,1,1,1,0,
+        0,0,1,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,
+    ];
+
+    // map virtualize
+    $(window).ready(function(){
+        for(var i=0; i<$('td').length; i++){
+            if(map[i] === 1){
+                $('td:eq(' + i + ')').css('backgroundColor', 'darkgrey');
+                $('td:eq(' + i + ')').attr('wall', '1');
+            }
+            else{
+                $('td:eq(' + i + ')').attr('wall', '0');
+            }
+        };
+    });
+</script>
+<script type="text/javascript">
+    $(window).ready(function(){
+        var targetPos = {
+            x: 6,
+            y: 1
+        };
+        var originPos = {
+            x: 1,
+            y: 1
+        };
+        var currentPos = null;  // 當前已踩的位置
+        var openedNodes = [];
+        var closedNodes = []
+        var openNodes = function(targetPos){
+            var addOpenNodes = [];
+            var newOriginPos = null;
+            
+            var newOriginPos = angular.copy(targetPos);
+            newOriginPos.closed = false;
+            newOriginPos.y -=1;
+            if($('td[x=' + newOriginPos.x + '][y=' + newOriginPos.y + ']:not([wall=1])').length > 0){
+                addOpenNodes.push(newOriginPos);
+            };
+
+            var newOriginPos = angular.copy(targetPos);
+            newOriginPos.closed = false;
+            newOriginPos.y +=1;
+            if($('td[x=' + newOriginPos.x + '][y=' + newOriginPos.y + ']:not([wall=1])').length > 0){
+                addOpenNodes.push(newOriginPos);
+            };
+
+            var newOriginPos = angular.copy(targetPos);
+            newOriginPos.closed = false;
+            newOriginPos.x -=1;
+            if($('td[x=' + newOriginPos.x + '][y=' + newOriginPos.y + ']:not([wall=1])').length > 0){
+                addOpenNodes.push(newOriginPos);
+            };
+
+            var newOriginPos = angular.copy(targetPos);
+            newOriginPos.closed = false;
+            newOriginPos.x +=1;
+            if($('td[x=' + newOriginPos.x + '][y=' + newOriginPos.y + ']:not([wall=1])').length > 0){
+                addOpenNodes.push(newOriginPos);
+            };
+
+            return addOpenNodes;
+        };
+        var calFGH = function(pos, targetPos, originPos){
+            pos.g = Math.pow(targetPos.x - pos.x, 2) + Math.pow(targetPos.y - pos.y, 2);
+            pos.h = Math.pow(originPos.x - pos.x, 2) + Math.pow(originPos.y - pos.y, 2);
+            pos.f = pos.g + pos.h;
+        };
+        var testTargetPosInOpenedNodes = function(){
+            return openedNodes.filter(function(row){
+                return row.x === targetPos.x && row.y === targetPos.y;
+            }).length > 0;
+        }
+
+
+        // main
+        currentPos = angular.copy(originPos);
+        currentPos.closed = true;  // 標記為已走過
+        openedNodes.push(currentPos);
+        calFGH(currentPos, targetPos, originPos);
+
+        while(!testTargetPosInOpenedNodes()){
+            openNodes(currentPos).every(function(row){
+                // check existed already
+                var existedNodeInOpenedNodes = openedNodes.filter(function(node){
+                    if(node.x === row.x && node.y === row.y) return true;
+                });
+                if(existedNodeInOpenedNodes.length > 0) return true;
+
+                openedNodes.push(row);
+                calFGH(row, targetPos, originPos);
+                return true;
+            });
+
+            var openedNodesWithClosed = openedNodes.filter(function(row){
+                return !row.closed;
+            });
+
+            openedNodesWithClosed.sort(function(a, b) {
+                return a.g - b.g;
+                // return a.h - b.h;
+                // return a.f - b.f;
+                /*
+                    切換三種值來測試
+                    ref: http://blog.minstrel.idv.tw/2004/12/star-algorithm.html
+                */
+            });
+
+            console.log(openedNodesWithClosed[0], openedNodesWithClosed[0].f);
+
+            if(!openedNodesWithClosed[0]) debugger;
+            openedNodesWithClosed[0].closed = true;
+            currentPos = openedNodesWithClosed[0];  // 踩 f = g + h 最小值的位置
+
+            $('td[x=' + currentPos.x + '][y=' + currentPos.y + ']').css('backgroundColor', 'green');
+        };
+    });
+</script>
+<style type="text/css">
+    td {
+        border: 1px solid black;
+        height: 30px;
+        width: 30px;
+        color: silver;
+    }
+</style>
+</body>
+</html>
